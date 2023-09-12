@@ -4,6 +4,8 @@
 
 package tp1;
 
+
+
 /**
  * Fichier de base pour le Devoir1A du cours IFT287
  *
@@ -39,6 +41,7 @@ public class Devoir1A
         System.out.println("Debut de la conversion du fichier " + nomFichierXML + " vers le fichier " + nomFichierJSON);
 
         // Votre code de conversion devrait aller ici
+        
         
         System.out.println("Conversion terminee.");
     }

@@ -1,6 +1,7 @@
 package tp1;
 
-public class MainBody extends Devoir1A
+public class MainBody
 {
-
+    Systems systems;
+    Organs organs;
 }
