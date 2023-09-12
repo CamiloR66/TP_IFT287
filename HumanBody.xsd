@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="urn:ift287:biblio:element" 
+			elementFormDefault="qualified">
+			<!--mlns="urn:ift287:humanBody:element"-->
+					
+<xsd:element name="MainBody">
+<xsd:complexType>
+	<xsd:sequence>
+		<xsd:element name="Systems" type="Systems"/>
+		<xsd:element name="Organs" type="Organs"/>
+	</xsd:sequence>
+	<xsd:attribute name="bodyName" type="xsd:string"/>
+    <xsd:attribute name="bodyID" type="xsd:integer"/>
+</xsd:complexType>
+  </xsd:element>
+
+<xsd:complexType name="Systems">
+	<xsd:sequence>
+		<xsd:element maxOccurs="unbounded" name="System">
+			<xsd:complexType>
+              <xsd:sequence>
+				<xsd:element maxOccurs="unbounded" name="Flow" type="Flow"/>
+                </xsd:sequence>
+				<xsd:attribute name="name" type="xsd:string" use="required"/>
+				<xsd:attribute name="id" type="xsd:integer" use="required"/>
+				<xsd:attribute name="type" type="xsd:integer" use="required"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="Flow">
+	<xsd:sequence>
+		<xsd:element maxOccurs="unbounded" name="Connectible" type="Connectible"/>
+		<xsd:element maxOccurs="unbounded" name="Connections" type="Connections"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:attribute name="id" type="xsd:integer" use="required"/>
+</xsd:complexType>
+
+
+<xsd:complexType name="Connectible">
+  <xsd:sequence>
+    <xsd:choice maxOccurs="unbounded">
+  <xsd:element minOccurs="0" maxOccurs="unbounded" name="DigestiveTract">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="StomachTract">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="DuodenumTract">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="Nose">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="AirConnectible">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="Alveoli">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="Artery">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="Vein">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="Capillaries">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="Atrium">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="Ventricle">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="RectumTract">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="BiDuct">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="Duct">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="DuctOverflowableJunction">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="DeversingDuct">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="InnerGallbladder">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element minOccurs="0" maxOccurs="unbounded" name="SalivaryDuct">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			<xsd:attribute name="volume" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="startRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="endRadius" type="xsd:decimal" use="optional"/>
+			<xsd:attribute name="length" type="xsd:decimal" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+      </xsd:choice>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="Connections">
+	<xsd:sequence>
+		<xsd:element minOccurs="0" maxOccurs="unbounded" name="Connection">
+			<xsd:complexType>
+            <xsd:sequence>
+				<xsd:element minOccurs="0" maxOccurs="unbounded" name="to">
+					<xsd:complexType>
+						<xsd:attribute name="id" type="xsd:integer" use="required"/>
+					</xsd:complexType>
+				</xsd:element>
+              </xsd:sequence>
+			<xsd:attribute name="id" type="xsd:integer" use="required"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:sequence>
+</xsd:complexType>	
+	
+<xsd:complexType name="Organs">
+
+	<xsd:sequence>
+		<xsd:element maxOccurs="unbounded" name="Organ">
+			<xsd:complexType>
+				<xsd:attribute name="name" type="xsd:string" use="required"/>
+				<xsd:attribute name="id" type="xsd:integer" use="required"/>
+				<xsd:attribute name="systemID" type="xsd:integer" use="required"/>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:sequence>
+</xsd:complexType>
+</xsd:schema>
