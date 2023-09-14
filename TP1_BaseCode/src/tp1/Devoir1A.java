@@ -36,8 +36,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class Devoir1A
 {
-    
-    
+	private static MainBody mainBody;
+	
     public static void main(String[] args)
     {
         if (args.length < 2)
@@ -55,13 +55,10 @@ public class Devoir1A
         factory.setValidating(true);
         try
         {
-            SAXParser parser = factory.newSAXParser();
-            parser.parse(new File(nomFichierXML), new DefaultHandler());     
-            parser.toString();
-            
-            DocumentBuilderFactory builder = DocumentBuilderFactory.newInstance();
-            Document doc = builder.newDocumentBuilder().newDocument();
-            doc.toString();
+            SAXParser Parser = factory.newSAXParser();
+            DefaultHandler Handler = new ParserHumanBody();
+            Parser.parse(new File(nomFichierXML), Handler);
+            mainBody = ((ParserHumanBody) Handler).getMainBody();
         
         }
         catch (ParserConfigurationException e)

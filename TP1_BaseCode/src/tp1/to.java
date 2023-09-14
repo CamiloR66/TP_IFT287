@@ -2,5 +2,11 @@ package tp1;
 
 public class to
 {
-    int id;
+    
+
+	int id;
+	
+	public to(int id) {
+		this.id = id;
+	}
 }
