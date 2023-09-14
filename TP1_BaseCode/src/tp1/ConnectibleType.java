@@ -17,5 +17,6 @@ public enum ConnectibleType {
 	DuctOverflowableJunction,
 	Duct,
 	DeversingDuct,
-	InnerGallbladder;
+	InnerGallbladder,
+	SalivaryDuct;
 }

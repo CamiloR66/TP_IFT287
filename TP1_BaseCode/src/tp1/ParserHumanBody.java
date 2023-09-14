@@ -45,7 +45,7 @@ public class ParserHumanBody extends DefaultHandler{
     public void startElement(String uri, String lName, String qName, Attributes attr) throws SAXException {
     	super.startElement(uri, lName, qName, attr);
         if(boolConnectibleType){
-
+        	
             int indexLength = attr.getIndex("length");
             int indexStartRadius = attr.getIndex("startRadius");
             int indexEndRadius = attr.getIndex("endRadius");
@@ -53,17 +53,24 @@ public class ParserHumanBody extends DefaultHandler{
 
             connectible = new Connectible(attr.getValue(attr.getIndex("name")),Integer.parseInt(attr.getValue(attr.getIndex("id"))), ConnectibleType.valueOf(qName));
             if(indexLength!=-1){
+            	String lenghtValue = attr.getValue(indexLength);
+            	if (!lenghtValue.isEmpty()) {
                 connectible.setLength(true);
                 connectible.setLength(Float.parseFloat(attr.getValue(indexLength)));
+                //System.out.println(indexLength);
+                System.out.println(attr.getValue(indexLength));
             }
+            	}
             if(indexStartRadius!=-1){
                 connectible.setStartRadius(true);
                 connectible.setStartRadius(Float.parseFloat(attr.getValue(indexStartRadius)));
             }
             if(indexEndRadius!=-1){
+            	String endRadiusValue = attr.getValue(indexEndRadius);
+            	if (!endRadiusValue.isEmpty()) {
                 connectible.setEndRadius(true);
                 connectible.setEndRadius(Float.parseFloat(attr.getValue(indexEndRadius)));
-            }
+            }}
             if(indexVolume!=-1){
                 connectible.setVolume(true);
                 connectible.setVolume(Float.parseFloat(attr.getValue(indexVolume)));
@@ -77,10 +84,12 @@ public class ParserHumanBody extends DefaultHandler{
             case SYSTEM:
                 system = new system(attr.getValue(attr.getIndex("name")),Integer.parseInt(attr.getValue(attr.getIndex("id"))), Integer.parseInt(attr.getValue(attr.getIndex("type"))));
                 body.addSystem(system);
+                System.out.println(system.name);
                 break;
             case FLOW:
                 flow = new Flow(Integer.parseInt(attr.getValue(attr.getIndex("id"))), attr.getValue(attr.getIndex("name")));
                 system.addFlow(flow);
+                System.out.println(attr.getValue(attr.getIndex("name")));
                 break;
             case CONNECTIBLE:
                 boolConnectibleType = true;
