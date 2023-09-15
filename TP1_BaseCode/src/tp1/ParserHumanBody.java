@@ -58,7 +58,7 @@ public class ParserHumanBody extends DefaultHandler{
                 connectible.setLength(true);
                 connectible.setLength(Float.parseFloat(attr.getValue(indexLength)));
                 //System.out.println(indexLength);
-                System.out.println(attr.getValue(indexLength));
+//                System.out.println(attr.getValue(indexLength));
             }
             	}
             if(indexStartRadius!=-1){
@@ -84,12 +84,12 @@ public class ParserHumanBody extends DefaultHandler{
             case SYSTEM:
                 system = new system(attr.getValue(attr.getIndex("name")),Integer.parseInt(attr.getValue(attr.getIndex("id"))), Integer.parseInt(attr.getValue(attr.getIndex("type"))));
                 body.addSystem(system);
-                System.out.println(system.name);
+//                System.out.println(system.name);
                 break;
             case FLOW:
                 flow = new Flow(Integer.parseInt(attr.getValue(attr.getIndex("id"))), attr.getValue(attr.getIndex("name")));
                 system.addFlow(flow);
-                System.out.println(attr.getValue(attr.getIndex("name")));
+//                System.out.println(attr.getValue(attr.getIndex("name")));
                 break;
             case CONNECTIBLE:
                 boolConnectibleType = true;

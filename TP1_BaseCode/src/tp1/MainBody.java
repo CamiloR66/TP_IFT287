@@ -22,4 +22,12 @@ public class MainBody
     public void addOrgan(Organ Organ){
     	listeOrgan.add(Organ);
     }
+    
+    public List<system> getListeSystems() {
+        return listeSystems;
+    }
+    
+    public List<Organ> getListeOrgan() {
+        return listeOrgan;
+    }
 }

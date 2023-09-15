@@ -33,6 +33,12 @@ public class Flow
 	public void addConnection(Connection connection) {
 		listeConnections.add(connection);
 	}
+    public List<Connection> getListeConnections() {
+        return listeConnections;
+    }
+    public List<Connectible> getListeConnectible() {
+        return listeConnectible;
+    }
 	
 
 }

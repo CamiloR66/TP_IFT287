@@ -6,13 +6,18 @@ package tp1;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.json.Json;
+import javax.json.JsonValue;
+import javax.json.stream.JsonGenerator;
+import javax.json.stream.JsonGeneratorFactory;
 
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -59,6 +64,16 @@ public class Devoir1A
             DefaultHandler Handler = new ParserHumanBody();
             Parser.parse(new File(nomFichierXML), Handler);
             mainBody = ((ParserHumanBody) Handler).getMainBody();
+            
+            
+            Map<String, Object> config = new HashMap<String, Object>(1);
+            config.put(JsonGenerator.PRETTY_PRINTING, true);
+            StringWriter w = new StringWriter();
+            JsonGeneratorFactory f = Json.createGeneratorFactory(config);
+            JsonGenerator jsonGenerator = f.createGenerator(w);
+
+            
+            exportJSON(mainBody, jsonGenerator);
         
         }
         catch (ParserConfigurationException e)
@@ -82,6 +97,56 @@ public class Devoir1A
         
         
         System.out.println("Conversion terminee.");
+    }
+    
+    private static void exportJSON(MainBody body, JsonGenerator g) {
+    	
+    	g.writeStartObject();
+    	g.write("bodyID", body.bodyId);
+    	JsonGenerator generateSystem = g.writeStartArray("Systems");
+    	for(system sys : body.getListeSystems()) {
+    		generateSystem.writeStartObject();
+    		generateSystem.write("name", sys.getName());
+    		generateSystem.write("id", sys.getId());
+    		generateSystem.write("type", sys.getType());
+			JsonGenerator generateFlow = g.writeStartArray("Flow");
+			for(Flow flow : sys.getListeFlow()) {
+				generateFlow.writeStartObject();
+				generateFlow.write("name", flow.getName());
+				generateFlow.write("id", flow.getId());
+				JsonGenerator generateConnectible = g.writeStartArray("Connectible");
+				generateConnectible.writeStartObject();
+				for (Connectible connectible : flow.getListeConnectible()) {
+					generateConnectible.writeStartArray(connectible.getConnectibleType().toString());
+					generateConnectible.writeStartObject();
+					System.out.println("  " + sys.getName() + "  " + flow.getName() + "  "
+							+ connectible.getConnectibleType().toString() + "  ");
+					generateConnectible.writeEnd();
+					generateConnectible.writeEnd();
+				}
+				generateConnectible.writeEnd();
+				generateConnectible.writeEnd();
+				JsonGenerator generateConnection = generateFlow.writeStartArray("Connections");
+				for (Connection conn : flow.getListeConnections()) {
+					generateConnection.writeStartObject();
+					generateConnection.write("id", conn.getId());
+					JsonGenerator genTo = generateConnection.writeStartArray("to");
+					for (to toCon : conn.getListeTo()) {
+						genTo.writeStartObject();
+						genTo.write("id", (JsonValue) toCon);
+						genTo.writeEnd();
+					}
+					genTo.writeEnd();
+					generateConnection.writeEnd();
+				}
+				generateConnection.writeEnd();
+				generateFlow.writeEnd();
+			}
+			generateFlow.writeEnd();
+			generateSystem.writeEnd();
+		}
+
+			
     }
 
 }

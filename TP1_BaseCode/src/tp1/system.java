@@ -19,8 +19,22 @@ public class system
 	public void addFlow(Flow flow) {
 		listeFlow.add(flow);
 	}
-	 
+	
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getType() {
+        return type;
+    }
     
+    public List<Flow> getListeFlow() {
+        return listeFlow;
+    }    
 
 }
 
