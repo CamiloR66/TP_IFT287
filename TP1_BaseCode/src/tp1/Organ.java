@@ -1,5 +1,7 @@
 package tp1;
 
+import javax.json.stream.JsonGenerator;
+
 public class Organ
 {
 	
@@ -7,9 +9,23 @@ public class Organ
     int id;
     int systemID;
     
-    public Organ(String value, int id, int systemID) {
+    public Organ(String name, int id, int systemID) {
+    	this.name = name;
 		this.id = id;
 		this.systemID = systemID;
 	}
+
+    public void JSONconverter(JsonGenerator jsonGenerator) throws Exception, IFT287Exception{
+        try {
+            jsonGenerator.writeStartObject()
+                    .write("name", name)
+                    .write("id", id)
+                    .write("systemID", systemID);
+            jsonGenerator.writeEnd();
+        }
+        catch (Exception e) {
+            java.lang.System.out.println(" " + e.toString());
+        }
+    }
 	
 }

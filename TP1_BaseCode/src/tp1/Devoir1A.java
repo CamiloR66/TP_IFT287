@@ -5,21 +5,25 @@
 package tp1;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.json.Json;
-import javax.json.JsonValue;
-import javax.json.stream.JsonGenerator;
-import javax.json.stream.JsonGeneratorFactory;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+/*import jakarta.json.Json;
+import jakarta.json.stream.JsonGenerator;
+import jakarta.json.stream.JsonGeneratorFactory;*/
+
+import javax.json.Json;
+import javax.json.stream.JsonGenerator;
+import javax.json.stream.JsonGeneratorFactory;
 
 /**
  * Fichier de base pour le Devoir1A du cours IFT287
@@ -68,12 +72,18 @@ public class Devoir1A
             
             Map<String, Object> config = new HashMap<String, Object>(1);
             config.put(JsonGenerator.PRETTY_PRINTING, true);
-            StringWriter w = new StringWriter();
+
+            FileWriter writer = new FileWriter(nomFichierJSON);
             JsonGeneratorFactory f = Json.createGeneratorFactory(config);
-            JsonGenerator jsonGenerator = f.createGenerator(w);
+            JsonGenerator gen = f.createGenerator(writer);
+
+            mainBody.JSONconverter(gen);
+            gen.close();
+            
+
 
             
-            exportJSON(mainBody, jsonGenerator);
+            //exportJSON(mainBody, jsonGenerator);
         
         }
         catch (ParserConfigurationException e)
@@ -99,10 +109,10 @@ public class Devoir1A
         System.out.println("Conversion terminee.");
     }
     
-    private static void exportJSON(MainBody body, JsonGenerator g) {
+   /* private static void exportJSON(MainBody body, JsonGenerator g) {
     	
     	g.writeStartObject();
-    	g.write("bodyID", body.bodyId);
+    	g.write("bodyID", body.bodyID);
     	JsonGenerator generateSystem = g.writeStartArray("Systems");
     	for(system sys : body.getListeSystems()) {
     		generateSystem.writeStartObject();
@@ -147,6 +157,6 @@ public class Devoir1A
 		}
 
 			
-    }
+    }*/
 
 }

@@ -1,5 +1,7 @@
 package tp1;
 
+import javax.json.stream.JsonGenerator;
+
 public class Connectible
 {
     ConnectibleType connectibleType;
@@ -88,5 +90,24 @@ public class Connectible
 		this.isStartRadius = isStartRadius;
 	}
 	
-    
+	public void JSONconverter(JsonGenerator jsonGenerator) throws Exception, IFT287Exception{
+        try {
+            jsonGenerator.writeStartObject()
+                    .write("type", connectibleType.name())
+                    .write("name", name)
+                    .write("id", id);
+                    if(isStartRadius())
+                        jsonGenerator.write("startRadius", startRadius);
+                    if(isEndRadius())
+                        jsonGenerator.write("endRadius", endRadius);
+                    if(isVolume())
+                        jsonGenerator.write("volume", volume);
+                    if(isLength())
+                        jsonGenerator.write("length", length);
+            jsonGenerator.writeEnd();
+        }
+        catch (Exception e) {
+            System.out.println(" " + e.toString());
+        }
+    }
 }

@@ -3,10 +3,12 @@ package tp1;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.stream.JsonGenerator;
+
 public class Flow
 {
     List<Connectible> listeConnectible=new ArrayList<Connectible>();
-    List<Connection> listeConnections=new ArrayList<Connection>();
+    List<Connection> listeConnection=new ArrayList<Connection>();
     String name;
     int id;
     
@@ -31,13 +33,38 @@ public class Flow
 		this.id = id;
 	}
 	public void addConnection(Connection connection) {
-		listeConnections.add(connection);
+		listeConnection.add(connection);
 	}
     public List<Connection> getListeConnections() {
-        return listeConnections;
+        return listeConnection;
     }
     public List<Connectible> getListeConnectible() {
         return listeConnectible;
+    }
+    
+    public void JSONconverter(JsonGenerator jsonGenerator) throws Exception, IFT287Exception{
+        try {
+            jsonGenerator.writeStartObject()
+                    .write("id", id)
+                    .write("name", name)
+                    .writeStartArray("Connectible");
+
+
+            for(Connectible connectible : listeConnectible){
+                connectible.JSONconverter(jsonGenerator);
+            }
+                    jsonGenerator.writeEnd();   //Connectible
+
+                    jsonGenerator.writeStartArray("Connection");
+            for(Connection connection : listeConnection){
+                connection.JSONconverter(jsonGenerator);
+            }
+                    jsonGenerator.writeEnd();   //Connection
+            jsonGenerator.writeEnd();   //Flow
+        }
+        catch (Exception e) {
+            java.lang.System.out.println(" " + e.toString());
+        }
     }
 	
 

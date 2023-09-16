@@ -3,6 +3,8 @@ package tp1;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.stream.JsonGenerator;
+
 public class Connection {
 	int id;
 	List<to> listeTo = new ArrayList<to>();
@@ -23,5 +25,21 @@ public class Connection {
 	public int getId() {
 		return id;
 	}
+
+	public void JSONconverter(JsonGenerator jsonGenerator) throws Exception, IFT287Exception{
+        try {
+            jsonGenerator.writeStartObject()
+                    .write("id", id)
+                    .writeStartArray("To");
+            for(to to : listeTo){
+                to.JSONconverter(jsonGenerator);
+            }
+                    jsonGenerator.writeEnd();   //To
+            jsonGenerator.writeEnd();   //Connection
+        }
+        catch (Exception e) {
+            java.lang.System.out.println(" " + e.toString());
+        }
+    }
 
 }
