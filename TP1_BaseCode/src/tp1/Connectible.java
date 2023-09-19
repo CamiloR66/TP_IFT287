@@ -2,20 +2,23 @@ package tp1;
 
 import javax.json.stream.JsonGenerator;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class Connectible
 {
-    ConnectibleType connectibleType;
-    String name;
-    int id;
-    float volume;
-    float startRadius;
-    float endRadius;
-    float length;
-    boolean isVolume = false;
-    boolean isEndRadius = false;
-    boolean isStartRadius = false;
-    
-    public ConnectibleType getConnectibleType() {
+	ConnectibleType connectibleType;
+	String name;
+	int id;
+	float volume;
+	float startRadius;
+	float endRadius;
+	float length;
+	boolean isVolume = false;
+	boolean isEndRadius = false;
+	boolean isStartRadius = false;
+
+	public ConnectibleType getConnectibleType() {
 		return connectibleType;
 	}
 	public void setConnectibleType(ConnectibleType connectibleType) {
@@ -58,9 +61,9 @@ public class Connectible
 		this.length = length;
 	}
 
-    boolean isLength = false;
-    
-    public Connectible(String name, int id, ConnectibleType connectibleType) {
+	boolean isLength = false;
+
+	public Connectible(String name, int id, ConnectibleType connectibleType) {
 		this.id = id;
 		this.name = name;
 		this.connectibleType = connectibleType;
@@ -89,25 +92,48 @@ public class Connectible
 	public void setStartRadius(boolean isStartRadius) {
 		this.isStartRadius = isStartRadius;
 	}
-	
+
 	public void JSONconverter(JsonGenerator jsonGenerator) throws Exception, IFT287Exception{
-        try {
-            jsonGenerator.writeStartObject()
-                    .write("type", connectibleType.name())
-                    .write("name", name)
-                    .write("id", id);
-                    if(isStartRadius())
-                        jsonGenerator.write("startRadius", startRadius);
-                    if(isEndRadius())
-                        jsonGenerator.write("endRadius", endRadius);
-                    if(isVolume())
-                        jsonGenerator.write("volume", volume);
-                    if(isLength())
-                        jsonGenerator.write("length", length);
-            jsonGenerator.writeEnd();
-        }
-        catch (Exception e) {
-            System.out.println(" " + e.toString());
-        }
-    }
+		try {
+			jsonGenerator.writeStartObject()
+			.write("type", connectibleType.name())
+			.write("name", name)
+			.write("id", id);
+			if(isStartRadius())
+				jsonGenerator.write("startRadius", startRadius);
+			if(isEndRadius())
+				jsonGenerator.write("endRadius", endRadius);
+			if(isVolume())
+				jsonGenerator.write("volume", volume);
+			if(isLength())
+				jsonGenerator.write("length", length);
+			jsonGenerator.writeEnd();
+		}
+		catch (Exception e) {
+			System.out.println(" " + e.toString());
+		}
+	}
+	public void XMLConverter(Document document, Element connectibleElement) {
+		try {
+
+			connectibleElement.setAttribute("name", name);
+			connectibleElement.setAttribute("id", id+"");
+			if(isStartRadius) {
+				connectibleElement.setAttribute("startRadius", startRadius+"");
+			}
+			if(isEndRadius) {
+				connectibleElement.setAttribute("endRadius", endRadius+"");
+			}
+			if(isVolume) {
+				connectibleElement.setAttribute("volume", volume+"");
+			}
+			if(isLength) {
+				connectibleElement.setAttribute("length", length+"");
+			}
+
+		} catch (Exception e){
+			java.lang.System.out.println(" " + e.toString());
+		}
+
+	}
 }

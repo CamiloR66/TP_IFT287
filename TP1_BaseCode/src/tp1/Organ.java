@@ -2,6 +2,9 @@ package tp1;
 
 import javax.json.stream.JsonGenerator;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class Organ
 {
 	
@@ -27,5 +30,17 @@ public class Organ
             java.lang.System.out.println(" " + e.toString());
         }
     }
+
+	public void XMLConverter(Document document, Element organElement) {
+		try {
+			organElement.setAttribute("name", name);
+			organElement.setAttribute("id", id+"");
+			organElement.setAttribute("systemID", systemID+"");
+
+        } catch (Exception e){
+            java.lang.System.out.println(" " + e.toString());
+        }
+		
+	}
 	
 }

@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.json.stream.JsonGenerator;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class Flow
 {
     List<Connectible> listeConnectible=new ArrayList<Connectible>();
@@ -66,6 +69,33 @@ public class Flow
             java.lang.System.out.println(" " + e.toString());
         }
     }
+
+	public void XMLConverter(Document document, Element flowElement) {
+		try {
+			flowElement.setAttribute("id", id+"");
+			flowElement.setAttribute("name", name);
+
+            Element connectibles = document.createElement("Connectible");
+            for (Connectible connectible: listeConnectible) {
+                Element connectibleElement = document.createElement(connectible.getConnectibleType().name());
+                connectible.XMLConverter(document, connectibleElement);
+                connectibles.appendChild(connectibleElement);
+            }
+            flowElement.appendChild(connectibles);
+
+            Element connections = document.createElement("Connections");
+            for(Connection connection: listeConnection) {
+                Element connectionElement = document.createElement("Connection");
+                connection.XMLConverter(document, connectionElement);
+                connections.appendChild(connectionElement);
+            }
+            flowElement.appendChild(connections);
+
+        } catch (Exception e){
+            java.lang.System.out.println(" " + e.toString());
+        }
+		
+	}
 	
 
 }

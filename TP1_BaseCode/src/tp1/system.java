@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.json.stream.JsonGenerator;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class system
 {
     List<Flow> listeFlow=new ArrayList<Flow>();
@@ -55,7 +58,25 @@ public class system
         catch (Exception e) {
             java.lang.System.out.println(" " + e.toString());
         }
-    }   
+    }
+
+	public void XMLConverter(Document document, Element bodySystemElement) {
+		try {
+			bodySystemElement.setAttribute("name", name);
+			bodySystemElement.setAttribute("id", id+"");
+			bodySystemElement.setAttribute("type", type+"");
+
+            for (Flow flow: listeFlow) {
+                Element flowElement = document.createElement("Flow");
+                flow.XMLConverter(document, flowElement);
+                bodySystemElement.appendChild(flowElement);
+            }
+
+        } catch (Exception e){
+            java.lang.System.out.println(" " + e.toString());
+        }
+		
+	}   
 
 }
 

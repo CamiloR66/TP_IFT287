@@ -2,6 +2,9 @@ package tp1;
 
 import javax.json.stream.JsonGenerator;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class to
 {
     int id;
@@ -24,4 +27,14 @@ public class to
             java.lang.System.out.println(" " + e.toString());
         }
     }
+
+	public void XMLConverter(Document document, Element toElement) {
+		try {
+			toElement.setAttribute("id", id+"");
+
+        } catch (Exception e){
+            java.lang.System.out.println(" " + e.toString());
+        }
+		
+	}
 }

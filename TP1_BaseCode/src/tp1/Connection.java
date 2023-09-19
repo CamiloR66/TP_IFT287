@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.json.stream.JsonGenerator;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class Connection {
 	int id;
 	List<to> listeTo = new ArrayList<to>();
@@ -41,5 +44,21 @@ public class Connection {
             java.lang.System.out.println(" " + e.toString());
         }
     }
+
+	public void XMLConverter(Document document, Element connectionElement) {
+		 try {
+			 connectionElement.setAttribute("id", id+"");
+
+	            for (to to: listeTo) {
+	                Element toElement = document.createElement("to");
+	                to.XMLConverter(document, toElement);
+	                connectionElement.appendChild(toElement);
+	            }
+
+	        } catch (Exception e){
+	            java.lang.System.out.println(" " + e.toString());
+	        }
+		
+	}
 
 }
