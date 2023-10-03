@@ -1,4 +1,4 @@
-package AubergeInn;
+package AubergeInn.Modèle;
 
 public class Commodite {
 

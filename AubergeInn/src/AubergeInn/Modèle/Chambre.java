@@ -1,4 +1,4 @@
-package AubergeInn;
+package AubergeInn.Modèle;
 
 import java.util.ArrayList;
 
@@ -71,15 +71,7 @@ public class Chambre {
     public void addCommodite(Commodite commodite) {
     	this.commodites.add(commodite);
     	
-    }
-    
-    public void removeCommodite(Commodite commodite) {
-    	
-    	if(commodite )
-    	
-    	
-    }
-    
+    }    
    
 
 }
