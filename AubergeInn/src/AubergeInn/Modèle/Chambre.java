@@ -72,6 +72,25 @@ public class Chambre {
     	this.commodites.add(commodite);
     	
     }    
+
+    public float getPrixCommodite(){
+        float prixTotal = 0;
+        for (Commodite commodite : commodites) {
+            prixTotal += commodite.getSurplusPrix();
+        }
+        return prixTotal;
+    }
+
+    public float getPrixTotalChambre(){
+        return prixBase + getPrixCommodite();
+    }
+
+    public void print(){
+        System.out.println("ID: " + IdChambre + " Nom: " + nomChambre + " Prix: " + prixBase + " Type de lit: " + typeLit);
+        for (Commodite X : commodites) {
+            System.out.println("Commodites: " + X.getDescription());            
+    }
    
 
+    }
 }
