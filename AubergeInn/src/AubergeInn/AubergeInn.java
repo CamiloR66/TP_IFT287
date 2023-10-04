@@ -7,6 +7,10 @@ package AubergeInn;
 import java.io.*;
 import java.util.StringTokenizer;
 import java.sql.*;
+import AubergeInn.Connexion;
+import AubergeInn.Modele.*;
+import AubergeInn.Gestionnaire.*;
+
 
 /**
  * Fichier de base pour le TP2 du cours IFT287
@@ -38,38 +42,32 @@ import java.sql.*;
  *     transaction
  * </pre>
  */
-public class AubergeInn
-{
+public class AubergeInn {
     private static Connexion cx;
 
     /**
      * @param args
      */
-    public static void main(String[] args) throws Exception
-    {
-        if (args.length < 4)
-        {
-            System.out.println("Usage: java AubergeInn.AubergeInn <serveur> <bd> <user> <password> [<fichier-transactions>]");
+    public static void main(String[] args) throws Exception {
+        if (args.length < 4) {
+            System.out.println(
+                    "Usage: java AubergeInn.AubergeInn <serveur> <bd> <user> <password> [<fichier-transactions>]");
             return;
         }
-        
+
         cx = null;
-        
-        try
-        {
+
+        try {
             // Il est possible que vous ayez à déplacer la connexion ailleurs.
             // N'hésitez pas à le faire!
             cx = new Connexion(args[0], args[1], args[2], args[3]);
             BufferedReader reader = ouvrirFichier(args);
             String transaction = lireTransaction(reader);
-            while (!finTransaction(transaction))
-            {
+            while (!finTransaction(transaction)) {
                 executerTransaction(transaction);
                 transaction = lireTransaction(reader);
             }
-        }
-        finally
-        {
+        } finally {
             if (cx != null)
                 cx.fermer();
         }
@@ -104,7 +102,93 @@ public class AubergeInn
                 {
                     // Lire les parametres ici et appeler la bonne methode
                     // de traitement pour la transaction
+                }if (command.equals("ajouterClient")) {
+                    // Extract parameters
+                    int idClient = readInt(tokenizer);
+                    String prenom = readString(tokenizer);
+                    String nom = readString(tokenizer);
+                    int age = readInt(tokenizer);
+                    
+                    Client client = new Client(idClient, prenom, nom, age);
+
+                    client.printClient();
+
+                    // Call the method to add a client
+                    // addClient(idClient, prenom, nom, age);
+                } else if (command.equals("supprimerClient")) {
+                    // Extract parameter
+                    int idClient = readInt(tokenizer);
+    
+                    // Call the method to delete a client
+                    // deleteClient(idClient);
+                } else if (command.equals("ajouterChambre")) {
+                    // Extract parameters
+                    int idChambre = readInt(tokenizer);
+                    String nomChambre = readString(tokenizer);
+                    String typeLit = readString(tokenizer);
+                    float prixBase = Float.parseFloat(readString(tokenizer));
+    
+                    // Call the method to add a room
+                    // addRoom(idChambre, nomChambre, typeLit, prixBase);
+                } else if (command.equals("supprimerChambre")) {
+                    // Extract parameter
+                    int idChambre = readInt(tokenizer);
+    
+                    // Call the method to delete a room
+                    // deleteRoom(idChambre);
+                } else if (command.equals("ajouterCommodite")) {
+                    // Extract parameters
+                    int idCommodite = readInt(tokenizer);
+                    String description = readString(tokenizer);
+                    float surplusPrix = Float.parseFloat(readString(tokenizer));
+    
+                    // Call the method to add a commodity
+                    // addCommodity(idCommodite, description, surplusPrix);
+                } else if (command.equals("inclureCommodite")) {
+                    // Extract parameters
+                    int idChambre = readInt(tokenizer);
+                    int idCommodite = readInt(tokenizer);
+    
+                    // Call the method to include a commodity in a room
+                    // includeCommodityInRoom(idChambre, idCommodite);
+                } else if (command.equals("enleverCommodite")) {
+                    // Extract parameters
+                    int idChambre = readInt(tokenizer);
+                    int idCommodite = readInt(tokenizer);
+    
+                    // Call the method to remove a commodity from a room
+                    // removeCommodityFromRoom(idChambre, idCommodite);
+                } else if (command.equals("afficherChambresLibres")) {
+                    // Extract parameters
+                    String dateDebut = tokenizer.nextToken();
+                    String dateFin = tokenizer.nextToken();
+    
+                    // Call the method to display available rooms between dates
+                    // displayAvailableRooms(dateDebut, dateFin);
+                } else if (command.equals("afficherClient")) {
+                    // Extract parameter
+                    int idClient = readInt(tokenizer);
+
+                    
+    
+                    // Call the method to display client information
+                    // displayClient(idClient);
+                } else if (command.equals("afficherChambre")) {
+                    // Extract parameter
+                    int idChambre = readInt(tokenizer);
+    
+                    // Call the method to display room information
+                    // displayRoom(idChambre);
+                } else if (command.equals("reserver")) {
+                    // Extract parameters
+                    int idClient = readInt(tokenizer);
+                    int idChambre = readInt(tokenizer);
+                    String dateDebut = readString(tokenizer);
+                    String dateFin = readString(tokenizer);
                 }
+    
+                    // Call the method to make a reservation
+                    // makeReservation(idClient, idChambre, dateDebut, dateFin);
                 else
                 {
                     System.out.println(" : Transaction non reconnue");
@@ -121,16 +205,14 @@ public class AubergeInn
         }
     }
 
-    
     // ****************************************************************
-    // *   Les methodes suivantes n'ont pas besoin d'etre modifiees   *
+    // * Les methodes suivantes n'ont pas besoin d'etre modifiees *
     // ****************************************************************
 
     /**
      * Ouvre le fichier de transaction, ou lit à partir de System.in
      */
-    public static BufferedReader ouvrirFichier(String[] args) throws FileNotFoundException
-    {
+    public static BufferedReader ouvrirFichier(String[] args) throws FileNotFoundException {
         if (args.length < 5)
             // Lecture au clavier
             return new BufferedReader(new InputStreamReader(System.in));
@@ -142,23 +224,20 @@ public class AubergeInn
     /**
      * Lecture d'une transaction
      */
-    static String lireTransaction(BufferedReader reader) throws IOException
-    {
+    static String lireTransaction(BufferedReader reader) throws IOException {
         return reader.readLine();
     }
 
     /**
      * Verifie si la fin du traitement des transactions est atteinte.
      */
-    static boolean finTransaction(String transaction)
-    {
+    static boolean finTransaction(String transaction) {
         // fin de fichier atteinte
         return (transaction == null || transaction.equals("quitter"));
     }
 
     /** Lecture d'une chaine de caracteres de la transaction entree a l'ecran */
-    static String readString(StringTokenizer tokenizer) throws Exception
-    {
+    static String readString(StringTokenizer tokenizer) throws Exception {
         if (tokenizer.hasMoreElements())
             return tokenizer.nextToken();
         else
@@ -168,39 +247,27 @@ public class AubergeInn
     /**
      * Lecture d'un int java de la transaction entree a l'ecran
      */
-    static int readInt(StringTokenizer tokenizer) throws Exception
-    {
-        if (tokenizer.hasMoreElements())
-        {
+    static int readInt(StringTokenizer tokenizer) throws Exception {
+        if (tokenizer.hasMoreElements()) {
             String token = tokenizer.nextToken();
-            try
-            {
+            try {
                 return Integer.valueOf(token).intValue();
-            }
-            catch (NumberFormatException e)
-            {
+            } catch (NumberFormatException e) {
                 throw new Exception("Nombre attendu a la place de \"" + token + "\"");
             }
-        }
-        else
+        } else
             throw new Exception("Autre parametre attendu");
     }
 
-    static Date readDate(StringTokenizer tokenizer) throws Exception
-    {
-        if (tokenizer.hasMoreElements())
-        {
+    static Date readDate(StringTokenizer tokenizer) throws Exception {
+        if (tokenizer.hasMoreElements()) {
             String token = tokenizer.nextToken();
-            try
-            {
+            try {
                 return Date.valueOf(token);
-            }
-            catch (IllegalArgumentException e)
-            {
+            } catch (IllegalArgumentException e) {
                 throw new Exception("Date dans un format invalide - \"" + token + "\"");
             }
-        }
-        else
+        } else
             throw new Exception("Autre parametre attendu");
     }
 

@@ -1,4 +1,4 @@
-package AubergeInn.Gestionnnaire;
+package AubergeInn.Gestionnaire;
 
 public class GestionChambre {
 
