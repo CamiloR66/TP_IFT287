@@ -1,4 +1,4 @@
-package AubergeInn.Modèle;
+package AubergeInn.Modele;
 
 import java.util.ArrayList;
 

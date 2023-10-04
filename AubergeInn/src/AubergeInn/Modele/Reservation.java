@@ -1,4 +1,4 @@
-package AubergeInn.Modèle;
+package AubergeInn.Modele;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
