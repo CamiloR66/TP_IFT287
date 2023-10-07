@@ -29,7 +29,17 @@ public class TableChambre {
 		statementDescCommodite = cx.getConnection()
 				.prepareStatement("select description, surplusprix" + " from chambrecommodite coch join commodite co on coch.idcommodite = co.idcommodite where idchambre = ? ");
 		statementAvailableRooms = cx.getConnection()
-				.prepareStatement("select c.idchambre, c.nomchambre, c.typelit, (c.prixbase + coalesce(sum(co.surplusprix), 0)) as totalprix from chambre c left join chambrecommodite cc on c.idchambre = cc.idchambre left join commodite co on cc.idcommodite = co.idcommodite where not exists (select 1 from reservation r where r.idchambre = c.idchambre and r.debut <= ? and r.fin >= ?) group by c.idchambre, c.nomchambre, c.typelit, c.prixbase;");
+				.prepareStatement("select c.idchambre, c.nomchambre, c.typelit, (c.prixbase + coalesce(sum(co.surplusprix), 0)) as totalprix "
+						+ "from chambre c "
+						+ "left join chambrecommodite cc on c.idchambre = cc.idchambre "
+						+ "left join commodite co on cc.idcommodite = co.idcommodite "
+						+ "where not exists ("
+						+ "select 1 "
+						+ "from reservation r "
+						+ "where r.idchambre = c.idchambre "
+						+ "and ((r.debut <= ? and r.fin > ?) or "
+						+ "(r.debut < ? and r.fin >= ?))) "
+						+ "group by c.idchambre, c.nomchambre, c.typelit, c.prixbase;\n");
 	}
 
 	public Chambre getChambre(int id) throws SQLException {
@@ -61,7 +71,9 @@ public class TableChambre {
 	public void showAvailable(Date debut, Date fin) throws SQLException {
 
 		statementAvailableRooms.setDate(1, debut);
-		statementAvailableRooms.setDate(2, fin);
+		statementAvailableRooms.setDate(2, debut);
+		statementAvailableRooms.setDate(3, fin);
+		statementAvailableRooms.setDate(4, fin);
 
 		ResultSet rset = statementAvailableRooms.executeQuery();
 
