@@ -1,6 +1,6 @@
 package AubergeInn.modeles;
 
-import java.sql.*;
+import java.sql.Date;
 
 public class Reservation {
 

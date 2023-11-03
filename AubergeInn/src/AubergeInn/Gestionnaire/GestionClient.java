@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import AubergeInn.Connexion;
 import AubergeInn.IFT287Exception;
 import AubergeInn.modeles.Client;
-import AubergeInn.modeles.Reservation;
 import AubergeInn.tables.TableClient;
 import AubergeInn.tables.TableReservation;
 

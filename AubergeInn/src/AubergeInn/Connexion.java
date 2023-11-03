@@ -1,6 +1,10 @@
 package AubergeInn;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * Gestionnaire d'une connexion avec une BD relationnelle via JDBC.<br>
