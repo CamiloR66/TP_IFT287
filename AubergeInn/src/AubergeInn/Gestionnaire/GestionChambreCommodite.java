@@ -1,4 +1,4 @@
-package AubergeInn.Gestionnaire;
+/*package AubergeInn.Gestionnaire;
 
 import java.sql.SQLException;
 
@@ -20,8 +20,8 @@ public class GestionChambreCommodite {
      * Creation d'une instance. La connection de l'instance de chambre et de
      * client doit être la même que cx, afin d'assurer l'intégrité des
      * transactions.
-     */
-    public GestionChambreCommodite(TableChambreCommodite tableChambreCommodite, TableChambre tableChambre, TableCommodite tableCommodite) throws IFT287Exception
+     **/
+/*    public GestionChambreCommodite(TableChambreCommodite tableChambreCommodite, TableChambre tableChambre, TableCommodite tableCommodite) throws IFT287Exception
     {
         if (tableChambreCommodite.getConnexion() != tableChambre.getConnexion() || tableChambreCommodite.getConnexion() != tableCommodite.getConnexion())
             throw new IFT287Exception(
@@ -75,4 +75,4 @@ public class GestionChambreCommodite {
             throw e;
         }
     }
-}
+}*/

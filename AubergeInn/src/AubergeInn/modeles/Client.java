@@ -1,11 +1,18 @@
 package AubergeInn.modeles;
 
+import java.util.List;
+
+import javax.persistence.OneToMany;
+
 public class Client {
 
 	private int id;
 	private String Nom;
     private String Prenom;
     private int Age;
+    @OneToMany(mappedBy = "m_client")
+    private List<Reservation> m_reservation;
+
     
     public Client()
     {
@@ -42,5 +49,9 @@ public class Client {
 	public void setAge(int age) {
 		Age = age;
 	}
+	 public void add(Reservation reservation)
+	 {
+	        m_reservation.add(reservation);
+	    }
 	
 }

@@ -1,4 +1,4 @@
-package AubergeInn.modeles;
+/*package AubergeInn.modeles;
 
 public class ChambreCommodite {
 
@@ -26,4 +26,4 @@ public class ChambreCommodite {
 		this.idCommodite = idCommodite;
 	}
     
-}
+}*/

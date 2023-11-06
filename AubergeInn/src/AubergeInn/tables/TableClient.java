@@ -1,18 +1,19 @@
 package AubergeInn.tables;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
+import javax.persistence.TypedQuery;
 
 import AubergeInn.Connexion;
 import AubergeInn.modeles.Client;
 
 public class TableClient {
      
-	private PreparedStatement stmtInfo;
-    private PreparedStatement stmtExiste;
+	private TypedQuery<Client> statementExiste;
+	/*private PreparedStatement stmtInfo;
     private PreparedStatement stmtInsert;
-    private PreparedStatement stmtDelete;
+    private PreparedStatement stmtDelete;*/
     private Connexion cx;
 
     /**
@@ -21,14 +22,13 @@ public class TableClient {
     public TableClient(Connexion cx) throws SQLException
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection()
-                .prepareStatement("select idclient, nom, prenom, age from client where idclient = ?");
-        stmtInsert = cx.getConnection()
+        statementExiste = cx.getConnection().createQuery("select cl from TupleClient cl where cl.m_idClient = :idCl", Client.class);
+        /*stmtInsert = cx.getConnection()
                 .prepareStatement("insert into client (idclient, nom, prenom, age) " + "values (?,?,?,?)");
         stmtDelete = cx.getConnection()
                 .prepareStatement("delete from client where idclient = ?");
         stmtInfo = cx.getConnection()
-                .prepareStatement("select idclient, nom, prenom, age from client where idclient =?");
+                .prepareStatement("select idclient, nom, prenom, age from client where idclient =?");*/
     }
 
     /**
@@ -42,13 +42,10 @@ public class TableClient {
     /**
      * Vérifie si un client existe.
      */
-    public boolean existe(int idCl) throws SQLException
+    public boolean exists(int idCl) throws SQLException
     {
-        stmtExiste.setInt(1, idCl);
-        ResultSet rset = stmtExiste.executeQuery();
-        boolean clientExiste = rset.next();
-        rset.close();
-        return clientExiste;
+    	statementExiste.setParameter("idCl", idCl);
+        return !statementExiste.getResultList().isEmpty();
     }
 
     /**
@@ -56,17 +53,11 @@ public class TableClient {
      */
     public Client getClient(int id) throws SQLException
     {
-        stmtExiste.setInt(1, id);
-        ResultSet rset = stmtExiste.executeQuery();
-        if (rset.next())
+    	statementExiste.setParameter("idCl", id);
+        List<Client> clients = statementExiste.getResultList();
+        if(!clients.isEmpty())
         {
-            Client Client = new Client();
-            Client.setIdClient(id);
-            Client.setNom(rset.getString(2));
-            Client.setPrenom(rset.getString(3));
-            Client.setAge(rset.getInt(4));
-            rset.close();
-            return Client;
+            return clients.get(0);
         }
         else
         {
@@ -77,40 +68,35 @@ public class TableClient {
     /**
      * Ajout d'un nouveau client.
      */
-    public void add(int idCl, String nom, String prenom, int age) throws SQLException
+    public void add(Client client)
     {
         /* Ajout du client. */
-        stmtInsert.setInt(1, idCl);
-        stmtInsert.setString(2, nom);
-        stmtInsert.setString(3, prenom);
-        stmtInsert.setInt(4, age);
-        stmtInsert.executeUpdate();
+    	cx.getConnection().persist(client);
     }
 
     /**
      * Suppression d'un client.
      */
-    public int delete(int idCl) throws SQLException
+    public int delete(Client client) throws SQLException
     {
-        stmtDelete.setInt(1, idCl);
-        return stmtDelete.executeUpdate();
+    	if(client != null)
+        {
+            /* Suppression du client. */
+            cx.getConnection().remove(client);
+            return 0;
+        }
+        return 1;
     }
 
     /**
      * Affichage des informations d'un client.
+     * @return 
      */
-    public void afficherClient(int idCl) throws SQLException
+    public List<Client> afficherClient(int idCl) throws SQLException
     {
-        stmtExiste.setInt(1, idCl);
-        ResultSet rset = stmtExiste.executeQuery();
-        if (rset.next())
-        {
-            System.out.print("IdClient: " + rset.getString(1) + " ");
-            System.out.print("Nom: " + rset.getString(2) + " ");
-            System.out.print("Prenom: " + rset.getString(3) + " ");
-            System.out.println("Age: " + rset.getString(4) + " ");
-            rset.close();
-        }
+    	statementExiste.setParameter("idCl", idCl);
+         List<Client> clients = statementExiste.getResultList();
+         return clients;
     }
 
 }

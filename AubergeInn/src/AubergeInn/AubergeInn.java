@@ -13,12 +13,10 @@ import java.sql.Date;
 import java.util.StringTokenizer;
 
 import AubergeInn.Gestionnaire.GestionChambre;
-import AubergeInn.Gestionnaire.GestionChambreCommodite;
 import AubergeInn.Gestionnaire.GestionClient;
 import AubergeInn.Gestionnaire.GestionCommodite;
 import AubergeInn.Gestionnaire.GestionReservation;
 import AubergeInn.tables.TableChambre;
-import AubergeInn.tables.TableChambreCommodite;
 import AubergeInn.tables.TableClient;
 import AubergeInn.tables.TableCommodite;
 import AubergeInn.tables.TableReservation;
@@ -102,13 +100,10 @@ public class AubergeInn {
 				TableChambre tableChambre = new TableChambre(cx);
 				TableClient tableClient = new TableClient(cx);
 				TableCommodite tableCommodite = new TableCommodite(cx);
-				TableChambreCommodite tableChambreCommodite = new TableChambreCommodite(cx);
 				TableReservation tableReservation = new TableReservation(cx);
-				
 				GestionChambre gestionChambre = new GestionChambre(tableChambre, tableReservation, tableCommodite);
-				GestionChambreCommodite gestionChambreCommodite = new GestionChambreCommodite(tableChambreCommodite, tableChambre, tableCommodite);
 				GestionClient gestionClient = new GestionClient(tableClient, tableReservation);
-				GestionCommodite gestionCommodite = new GestionCommodite(tableCommodite, tableChambreCommodite);
+				GestionCommodite gestionCommodite = new GestionCommodite(tableCommodite, tableChambre);
 				GestionReservation gestionReservation = new GestionReservation(tableReservation, tableChambre, tableClient);
 		
 				
@@ -147,7 +142,6 @@ public class AubergeInn {
 					gestionChambre.delete(id);
 					
 					
-					int idChambre = readInt(tokenizer);
 
 					// Call the method to delete a room
 					// deleteRoom(idChambre);
@@ -166,7 +160,7 @@ public class AubergeInn {
 					int idChambre = readInt(tokenizer);
 					int idCommodite = readInt(tokenizer);
 					
-					gestionChambreCommodite.add(idChambre, idCommodite);
+					gestionChambre.include(idChambre, idCommodite);
 
 					// Call the method to include a commodity in a room
 					// includeCommodityInRoom(idChambre, idCommodite);
@@ -175,7 +169,7 @@ public class AubergeInn {
 					int idChambre = readInt(tokenizer);
 					int idCommodite = readInt(tokenizer);
 					
-					gestionChambreCommodite.delete(idChambre, idCommodite);
+					gestionChambre.remove(idChambre, idCommodite);
 
 					// Call the method to remove a commodity from a room
 					// removeCommodityFromRoom(idChambre, idCommodite);
@@ -192,6 +186,7 @@ public class AubergeInn {
 					// Extract parameter
 					int idClient = readInt(tokenizer);
 					
+					gestionClient.information(idClient);
 					gestionReservation.information(idClient);
 
 

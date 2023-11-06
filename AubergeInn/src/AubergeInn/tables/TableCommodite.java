@@ -3,14 +3,18 @@ package AubergeInn.tables;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
+import javax.persistence.TypedQuery;
 
 import AubergeInn.Connexion;
+import AubergeInn.modeles.Commodite;
 
 public class TableCommodite {
 
-	private final PreparedStatement statementExiste;
-    private final PreparedStatement statementInsert;
-    private final PreparedStatement statementDelete;
+	private TypedQuery<Commodite> statementExists;
+    /*private final PreparedStatement statementDelete;
+    private final PreparedStatement statementInsert;*/
 
     private final Connexion cx;
 
@@ -21,12 +25,11 @@ public class TableCommodite {
     public TableCommodite(Connexion cx) throws SQLException
     {
         this.cx = cx;
-        statementExiste = cx.getConnection()
-                .prepareStatement("select idcommodite, description, surplusprix from commodite where idcommodite = ?");
-        statementInsert = cx.getConnection()
+        statementExists = cx.getConnection().createQuery("select c from TupleCommodite c where c.m_idCo = :idCo", Commodite.class);
+        /*statementInsert = cx.getConnection()
                 .prepareStatement("insert into commodite (idcommodite, description, surplusprix) " + "values (?,?,?)");
         statementDelete = cx.getConnection()
-                .prepareStatement("delete from commodite where idcommodite = ?");
+                .prepareStatement("delete from commodite where idcommodite = ?");*/
     }
 
     /**
@@ -40,34 +43,45 @@ public class TableCommodite {
     /**
      * Vérifie si une commodite existe.
      */
-    public boolean existe(int idcommodite) throws SQLException
+    public boolean exists(int idCommodite) throws SQLException
     {
-        statementExiste.setInt(1, idcommodite);
-        ResultSet rset = statementExiste.executeQuery();
-        boolean commoditeExiste = rset.next();
-        rset.close();
-        return commoditeExiste;
+    	statementExists.setParameter("idCo", idCommodite);
+        return !statementExists.getResultList().isEmpty();
     }
 
     /**
      * Ajout d'une nouvelle commodite dans la base de données.
      */
-    public void add(int idcommodite, String description, float surplusprix) throws SQLException
+    public void add(Commodite commodite) throws SQLException
     {
-        statementInsert.setInt(1, idcommodite);
-        statementInsert.setString(2, description);
-        statementInsert.setFloat(3, surplusprix);
-        statementInsert.executeUpdate();
+    	cx.getConnection().persist(commodite);
     }
 
     /**
      * Cette commande enlève une commodité de la base de données.
      * Cette commande n'est pas utilisé dans ce devoir (TP2).
      */
-    public int delete(int idcommodite) throws SQLException
+    public int delete(Commodite commodite) throws SQLException
     {
-        statementDelete.setInt(1, idcommodite);
-        return statementDelete.executeUpdate();
+    	if(commodite != null)
+        {
+            cx.getConnection().remove(commodite);
+            return 1;
+        }
+        return 0;
+    }
+    public Commodite getCommodite(int idCo)
+    {
+    	statementExists.setParameter("idCo", idCo);
+        List<Commodite> listCommodites = statementExists.getResultList();
+        if (!listCommodites.isEmpty())
+        {
+            return listCommodites.get(0);
+        }
+        else
+        {
+            return null;
+        }
     }
 
 

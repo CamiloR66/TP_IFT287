@@ -1,6 +1,7 @@
 package AubergeInn.Gestionnaire;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import AubergeInn.Connexion;
 import AubergeInn.IFT287Exception;
@@ -23,16 +24,21 @@ public class GestionClient {
         this.tableReservation = tableReservation;
     }
 	
-	public void add(int id, String nom, String prenom, int age) throws SQLException, IFT287Exception, Exception{
+	public void add(int id, String nom, String prenom, int age) throws IFT287Exception, Exception{
 		
 		try
         {
+			cx.startTransaction();
+			
+			
+			Client client = new Client(id, nom, prenom, age);
+			
             // Vérifie si le client existe déja
             if (tableClient.getClient(id)!=null) {
             	throw new IFT287Exception("Client existe déjà: " + id);
             }
             // Ajout du client.
-            tableClient.add(id, nom, prenom, age);
+            tableClient.add(client);
 
             // Commit
             cx.commit();
@@ -47,11 +53,14 @@ public class GestionClient {
     {
         try
         {
+        	cx.startTransaction();
             // Vérifie si le client existe et son nombre de réservations en cours
             Client client = tableClient.getClient(id);
-            if (client == null)
-                throw new IFT287Exception("Client inexistant: " + id);
-            int nb = tableClient.delete(id);
+            if (client == null) {
+            	throw new IFT287Exception("Client inexistant: " + id);
+            }
+            
+            int nb = tableClient.delete(client);
             if (nb == 0)
                 throw new IFT287Exception("Client " + id + " inexistant");
 
@@ -62,5 +71,26 @@ public class GestionClient {
             cx.rollback();
             throw e;
         }
+    }
+	public void information(int idClient)throws IFT287Exception, Exception
+    {
+
+        cx.startTransaction();
+
+        // Verifie si le client existe
+        Client client = tableClient.getClient(idClient);
+        if (client == null)
+            throw new IFT287Exception("Client inexistant: " + idClient);
+
+        List<Client> clientList = tableClient.afficherClient(idClient);
+
+        for(Client clients : clientList) {
+            System.out.print("IdClient: " + clients.getIdClient() + " ");
+            System.out.print("Prenom: " + clients.getNom() + " ");
+            System.out.print("Nom: " + clients.getPrenom() + " ");
+            System.out.println("Age: " + clients.getAge() + " ");
+        }
+
+        cx.commit();
     }
 }

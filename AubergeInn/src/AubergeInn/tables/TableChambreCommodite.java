@@ -1,4 +1,4 @@
-package AubergeInn.tables;
+/*package AubergeInn.tables;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +16,7 @@ public class TableChambreCommodite {
 	/**
 	 * Creation d'une instance.
 	 */
-	public TableChambreCommodite(Connexion cx) throws SQLException
+/*	public TableChambreCommodite(Connexion cx) throws SQLException
 	{
 		this.cx = cx;
 		statementExiste = cx.getConnection()
@@ -30,7 +30,7 @@ public class TableChambreCommodite {
 	/**
 	 * Retourner la connexion associée.
 	 */
-	public Connexion getConnexion()
+/*	public Connexion getConnexion()
 	{
 		return cx;
 	}
@@ -76,11 +76,11 @@ public class TableChambreCommodite {
 	/**
 	 * Enlever une commodite-chambre
 	 */
-	public int delete(int idchambre, int idcommodite) throws SQLException
+/*	public int delete(int idchambre, int idcommodite) throws SQLException
 	{
 		statementDelete.setInt(1, idchambre);
 		statementDelete.setInt(2, idcommodite);
 		return statementDelete.executeUpdate();
 	}
 
-}
+}*/

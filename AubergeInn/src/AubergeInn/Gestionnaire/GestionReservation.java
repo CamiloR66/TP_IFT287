@@ -2,11 +2,13 @@ package AubergeInn.Gestionnaire;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 
 import AubergeInn.Connexion;
 import AubergeInn.IFT287Exception;
 import AubergeInn.modeles.Chambre;
 import AubergeInn.modeles.Client;
+import AubergeInn.modeles.Commodite;
 import AubergeInn.modeles.Reservation;
 import AubergeInn.tables.TableChambre;
 import AubergeInn.tables.TableClient;
@@ -30,10 +32,13 @@ public class GestionReservation {
 		this.tableClient = tableClient;
 	}
 	public void book(int idClient, int idChambre, Date dateDebut, Date dateFin)
-            throws SQLException, IFT287Exception, Exception
-    {
-        try {
-            // Vérifier que la chambre est louee
+			throws SQLException, IFT287Exception, Exception
+	{
+        try
+        {
+            cx.startTransaction();
+
+            // Verif que la chambre est louée
             Chambre chambre = tableChambre.getChambre(idChambre);
             if (chambre == null)
                 throw new IFT287Exception("Chambre inexistante: " + idChambre);
@@ -43,11 +48,9 @@ public class GestionReservation {
             if (client == null)
                 throw new IFT287Exception("Client inexistant: " + idClient);
 
-            // Vérifier que la date est dans le passe
-            Date dateNow = new Date(System.currentTimeMillis());
-            if (dateFin.before(dateNow)){
-                throw new IFT287Exception("La date de fin de la réservation est déjà passé");
-            }
+            // Vérifier que la réservation existe
+            if (tableReservation.existe(idClient, idChambre, dateDebut))
+                throw new IFT287Exception("Réservation idCl: " + idClient + ", idCh: " + idChambre + ", dateDebut: " + dateDebut + " existe deja");
 
             // Vérifier que la date est de fin n'est pas avant la date de debut et vice-versa
             if (dateDebut.after(dateFin))
@@ -55,39 +58,62 @@ public class GestionReservation {
             if (dateFin.before(dateDebut))
                 throw new IFT287Exception("Date fin avant la date de debut");
 
-            // Vérifier que la chambre n'est pas déjà réservé
-            Reservation reservation = tableReservation.getReservation(idClient, idChambre, dateDebut);
-            if (reservation != null)
-                throw new IFT287Exception("Cette réservation existe déjà");
-            
-            
-            Reservation validation = tableReservation.getVerificationDate(idChambre, dateDebut, dateFin);
-            if (validation != null)
-                throw new IFT287Exception("Cette chambre est déjà reservee pour ces dates");
-           
-            tableReservation.book(idClient, idChambre, dateDebut, dateFin);
+            // Vérifier que la date est dans le passe
+            Date dateNow = new Date(System.currentTimeMillis());
+            if (dateFin.before(dateNow)){
+                throw new IFT287Exception("La date de fin de la réservation est déjà passé");
+            }
 
-            // Commit
+            // Creation de la reservation
+            Reservation reservation = new Reservation(idClient, idChambre, dateDebut, dateFin);
+            tableReservation.book(reservation);
+
+            Reservation reservation1 = tableReservation.getReservation(idClient, idChambre, dateDebut, dateFin);
+            chambre.add(reservation1);
+
+            client.add(reservation1);
+
             cx.commit();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             cx.rollback();
             throw e;
         }
-        
     }
 	public void information(int idCl) throws SQLException, IFT287Exception, Exception {
-        try
-        {
-            // Verifier que le client a au moins une reservation
-            Reservation reservation = tableReservation.getReservationClient(idCl);
-            if (reservation == null)
-                throw new IFT287Exception("Le client " + idCl + " n'a pas de réservation");
+		{
+			cx.startTransaction();
 
-            tableReservation.information(idCl);
+			List<Reservation> reservationList = tableReservation.information(idCl);
+			if (reservationList.size() == 0) {
+				cx.commit();
 
-        } catch (Exception e) {
-            cx.rollback();
-            throw e;
-        }
-    }
+				throw new IFT287Exception("Le client #" + idCl + " n'a pas de réservation dans le système.");
+			}
+
+			for(Reservation reservation : reservationList)
+			{
+
+
+				System.out.print("IdClient: " + reservation.getIdClient() + " ");
+				System.out.print("IdChambre: " + reservation.getIdChambre() + " ");
+				System.out.print("DateDebut: " + reservation.getDateDebut() + " ");
+				System.out.print("DateFin: " + reservation.getDateFin() + " ");
+
+				Chambre chambre = tableChambre.getChambre(reservation.getIdChambre());
+				float prixChambre = chambre.getPrix();
+				int prixCommodite = 0;
+				float prixChambreETCommodites = 0;
+				List<Commodite> tupleCommoditeList = chambre.getCommodite();
+				for (Commodite commodite : tupleCommoditeList) {
+					prixCommodite += commodite.getSurplus();
+				}
+				prixChambreETCommodites = prixChambre + prixCommodite;
+				System.out.println("Prix de la chambre et de ses commodités incluses: " + prixChambreETCommodites + "$");
+
+			}
+			cx.commit();
+		}
+	}
 }

@@ -4,12 +4,12 @@ public class Commodite {
 	
     private int id;
     private String description;
-    private int surplus;
+    private float surplus;
     
     public Commodite() {
     }
 
-    public Commodite(int id, String description, int surplus){
+    public Commodite(int id, String description, float surplus){
         this.setId(id);
         this.setDescription(description);
         this.setSurplus(surplus);
@@ -27,10 +27,10 @@ public class Commodite {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public int getSurplus() {
+	public float getSurplus() {
 		return surplus;
 	}
-	public void setSurplus(int surplus) {
+	public void setSurplus(float surplus) {
 		this.surplus = surplus;
 	}
     
