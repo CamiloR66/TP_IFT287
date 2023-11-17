@@ -1,5 +1,7 @@
 package AubergeInn.modeles;
 
+import org.bson.Document;
+
 public class Commodite {
 	
     private int id;
@@ -14,6 +16,12 @@ public class Commodite {
         this.setDescription(description);
         this.setSurplus(surplus);
     }
+
+	public Commodite(Document doc) {
+		id = doc.getInteger("idCommodite");
+		description = doc.getString("description");
+		surplus = doc.getDouble("surplus").floatValue();
+	}
     
 	public int getId() {
 		return id;

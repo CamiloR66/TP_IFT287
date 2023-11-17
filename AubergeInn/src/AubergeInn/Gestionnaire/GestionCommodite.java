@@ -1,52 +1,112 @@
 package AubergeInn.Gestionnaire;
 
+import static com.mongodb.client.model.Filters.eq;
+
 import java.sql.SQLException;
+
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
 
 import AubergeInn.Connexion;
 import AubergeInn.IFT287Exception;
+import AubergeInn.modeles.Client;
 import AubergeInn.modeles.Commodite;
-import AubergeInn.tables.TableChambre;
-import AubergeInn.tables.TableCommodite;
 
 public class GestionCommodite {
 
-	private TableCommodite tableCommodite;
-    private TableChambre tableChambre;
-
+	
     private Connexion cx;
+    private MongoCollection<Document> collectionCommodite;
 
     public GestionCommodite(Connexion cx) throws IFT287Exception
     {
-        this.cx = tableCommodite.getConnexion();
-        if (tableCommodite.getConnexion() != tableChambre.getConnexion())
-            throw new IFT287Exception("Les instances de commodite et de commoditeChambre n'utilisent pas la même connexion au serveur");
-        this.tableCommodite = tableCommodite;
-        this.tableChambre = tableChambre;
-    }
-    
-    public void add(int id, String description, float surplus)
-            throws SQLException, IFT287Exception, Exception
-    {
-        try
-        {
-        	cx.startTransaction();
-        	
-        	Commodite commodite = new Commodite(id, description, surplus);
-            // Vérifie si la commodite existe déja
-            if (tableCommodite.exists(id)) {
-                throw new IFT287Exception("Commodite existe déjà: " + id);
-            }
-
-            // Ajout de la commodite dans la table des commodites
-            tableCommodite.add(commodite);
-
-            // Commit
-            cx.commit();
+        try {
+            this.cx = cx;
+            collectionCommodite = cx.getMongoDatabase().getCollection("Commodites");
+        } catch (Exception e) {
+            throw new IFT287Exception("Impossible d'ouvrir la collection de clients");
         }
-        catch (Exception e)
+
+        collectionCommodite = cx.getMongoDatabase().getCollection("Commodites");
+    }
+
+    public Connexion getConnexion() {
+        return cx;
+    }
+	
+    public boolean existe(int idCommodite) throws Exception
+    {
+        Commodite commodite = null;
+        try {
+            commodite = getCommodite(idCommodite);
+            return commodite != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Commodite getCommodite(int idCommodite) throws Exception
+    {
+        Commodite commodite  = null;
+        Document doc = collectionCommodite.find(eq("idCommodite", idCommodite)).first();
+        if (doc != null) {
+            commodite = new Commodite(doc);
+            return commodite;
+        }
+        return null;
+    }
+
+
+	public boolean add(Commodite commodite) throws Exception {
+
+        if (existe(commodite.getId())) {
+            return false;
+        }
+        else
         {
-            cx.rollback();
-            throw e;
+            try {
+                collectionCommodite.insertOne(commodite.toDoc());
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }   
+		
+	}
+	public boolean delete(Commodite commodite) throws Exception
+    {
+        if(!existe(commodite.getId()))
+        {
+            return false;
+        }
+        else
+        {
+            try {
+                collectionCommodite.deleteOne(eq("idClient", commodite.getId()));
+                return true;
+            } catch (Exception e) {
+                return false;  
+            }
+        }
+        
+        
+    }
+
+    public boolean update(Commodite commodite) throws Exception
+    {
+        if(!existe(commodite.getId()))
+        {
+            return false;
+        }
+        else
+        {
+            try {
+                collectionCommodite.updateOne(eq("idClient", commodite.getId()), commodite.toDoc());
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 }

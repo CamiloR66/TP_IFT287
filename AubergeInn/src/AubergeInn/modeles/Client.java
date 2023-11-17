@@ -56,8 +56,20 @@ public class Client {
 		Age = age;
 	}
 	 public void add(Reservation reservation)
-	 {
+	{
 	        m_reservation.add(reservation);
-	    }
+	}
+	public void printClient(){
+
+		System.out.println("idClient: " + id + " Nom: " + Nom + " Prenom: " + Prenom + " Age: " + Age);
+	}
+
+    public Document toDocument() {
+        return new Document()
+				.append("idClient", id)
+				.append("nom", Nom)
+				.append("prenom", Prenom)
+				.append("age", Age);
+    }
 	
 }
