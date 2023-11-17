@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.exists;
+
 import org.bson.Document;
 
 import AubergeInn.Connexion;
@@ -21,87 +24,91 @@ public class GestionClient {
     {
         try {
             this.cx = cx;
-            collectionClient = cx.getMongoDatabase().getCollection("Client");
+            collectionClient = cx.getMongoDatabase().getCollection("Clients");
         } catch (Exception e) {
             throw new IFT287Exception("Impossible d'ouvrir la collection de clients");
         }
 
-        collectionClient = cx.getMongoDatabase().getCollection("Client");
+        collectionClient = cx.getMongoDatabase().getCollection("Clients");
     }
 
     public Connexion getConnexion() {
         return cx;
     }
 	
+    public boolean existe(int idClient) throws Exception
+    {
+        Client client = null;
+        try {
+            client = getClient(idClient);
+            return client != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Client getClient(int idClient) throws Exception
+    {
+        Client client = null;
+        Document doc = collectionClient.find(eq("idClient", idClient)).first();
+        if (doc != null) {
+            client = new Client(doc);
+            return client;
+        }
+        return null;
+    }
 
 
-	public void add(int id, String nom, String prenom, int age) throws IFT287Exception, Exception{
+	public boolean add(Client client) throws Exception {
+
+        if (existe(client.getIdClient())) {
+            return false;
+        }
+        else
+        {
+            try {
+                collectionClient.insertOne(client.toDocument());
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }   
 		
-		try
-        {
-			cx.startTransaction();
-			
-			
-			Client client = new Client(id, nom, prenom, age);
-			
-            // Vérifie si le client existe déja
-            if (tableClient.getClient(id)!=null) {
-            	throw new IFT287Exception("Client existe déjà: " + id);
-            }
-            // Ajout du client.
-            tableClient.add(client);
-
-            // Commit
-            cx.commit();
-        }
-        catch (Exception e)
-        {
-            cx.rollback();
-            throw e;
-        }
 	}
-	public void delete(int id) throws SQLException, IFT287Exception, Exception
+	public boolean delete(Client client) throws Exception
     {
-        try
+        if(!existe(client.getIdClient()))
         {
-        	cx.startTransaction();
-            // Vérifie si le client existe et son nombre de réservations en cours
-            Client client = tableClient.getClient(id);
-            if (client == null) {
-            	throw new IFT287Exception("Client inexistant: " + id);
+            return false;
+        }
+        else
+        {
+            try {
+                collectionClient.deleteOne(eq("idClient", client.getIdClient()));
+                return true;
+            } catch (Exception e) {
+                return false;  
             }
-            
-            int nb = tableClient.delete(client);
-            if (nb == 0)
-                throw new IFT287Exception("Client " + id + " inexistant");
-
-            cx.commit();
         }
-        catch (Exception e)
-        {
-            cx.rollback();
-            throw e;
-        }
+        
+        
     }
-	public void information(int idClient)throws IFT287Exception, Exception
+
+    public boolean update(Client client) throws Exception
     {
-
-        cx.startTransaction();
-
-        // Verifie si le client existe
-        Client client = tableClient.getClient(idClient);
-        if (client == null)
-            throw new IFT287Exception("Client inexistant: " + idClient);
-
-        List<Client> clientList = tableClient.afficherClient(idClient);
-
-        for(Client clients : clientList) {
-            System.out.print("IdClient: " + clients.getIdClient() + " ");
-            System.out.print("Prenom: " + clients.getNom() + " ");
-            System.out.print("Nom: " + clients.getPrenom() + " ");
-            System.out.println("Age: " + clients.getAge() + " ");
+        if(!existe(client.getIdClient()))
+        {
+            return false;
         }
-
-        cx.commit();
+        else
+        {
+            try {
+                collectionClient.updateOne(eq("idClient", client.getIdClient()), client.toDocument());
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
     }
+
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.OneToMany;
 
+import org.bson.Document;
+
 public class Client {
 
 	private int id;
@@ -14,8 +16,12 @@ public class Client {
     private List<Reservation> m_reservation;
 
     
-    public Client()
+    public Client(Document doc)
     {
+		Prenom = doc.getString("prenom");
+		Nom = doc.getString("nom");
+		Age = doc.getInteger("age");
+		id = doc.getInteger("idClient");
     }
 
     public Client(int idClient, String nom, String prenom, int age) {

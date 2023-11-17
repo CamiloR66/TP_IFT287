@@ -22,7 +22,7 @@ public class GestionReservation {
 	private Connexion cx;
 
 
-	public GestionReservation(TableReservation tableReservation, TableChambre tableChambre, TableClient tableClient) throws IFT287Exception {
+	public GestionReservation(Connexion cx) throws IFT287Exception {
 		if (tableChambre.getConnexion() != tableChambre.getConnexion() || tableReservation.getConnexion() != tableChambre.getConnexion())
 			throw new IFT287Exception(
 					"Les instances de chambre, de client et de reservation n'utilisent pas la meme connexion au serveur");

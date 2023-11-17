@@ -16,6 +16,7 @@ import AubergeInn.Gestionnaire.GestionChambre;
 import AubergeInn.Gestionnaire.GestionClient;
 import AubergeInn.Gestionnaire.GestionCommodite;
 import AubergeInn.Gestionnaire.GestionReservation;
+import AubergeInn.modeles.Client;
 
 
 /**
@@ -50,6 +51,10 @@ import AubergeInn.Gestionnaire.GestionReservation;
  */
 public class AubergeInn {
 	private static Connexion cx;
+	static GestionChambre gestionChambre;
+	static GestionClient gestionClient;
+	static GestionCommodite gestionCommodite;
+	static GestionReservation gestionReservation;
 
 	/**
 	 * @param args
@@ -68,6 +73,12 @@ public class AubergeInn {
 			// N'hésitez pas à le faire!
 			cx = new Connexion(args[0], args[1], args[2], args[3]);
 			BufferedReader reader = ouvrirFichier(args);
+
+			gestionChambre = new GestionChambre(cx);
+			gestionClient = new GestionClient(cx);
+			gestionCommodite = new GestionCommodite(cx);
+			gestionReservation = new GestionReservation(cx);
+
 			String transaction = lireTransaction(reader);
 			while (!finTransaction(transaction)) {
 				executerTransaction(transaction);
@@ -93,15 +104,6 @@ public class AubergeInn {
 			{
 				String command = tokenizer.nextToken();
 
-				TableChambre tableChambre = new TableChambre(cx);
-				TableClient tableClient = new TableClient(cx);
-				TableCommodite tableCommodite = new TableCommodite(cx);
-				TableReservation tableReservation = new TableReservation(cx);
-				GestionChambre gestionChambre = new GestionChambre(tableChambre, tableReservation, tableCommodite);
-				GestionClient gestionClient = new GestionClient(tableClient, tableReservation);
-				GestionCommodite gestionCommodite = new GestionCommodite(tableCommodite, tableChambre);
-				GestionReservation gestionReservation = new GestionReservation(tableReservation, tableChambre, tableClient);
-		
 				
 				//Ajouter client
 				if (command.equals("ajouterClient")) {
@@ -111,13 +113,31 @@ public class AubergeInn {
 					String nom = readString(tokenizer);
 					int age = readInt(tokenizer);
 
-					gestionClient.add(idClient, nom, prenom, age);
+					Client client = new Client(idClient, prenom, nom, age);
+					if(gestionClient.add(client))
+					{
+						System.out.println("Client ajouté");
+					}
+					else
+					{
+						System.out.println("Client non ajouté");
+					}
 
-				} else if (command.equals("supprimerClient")) {
+				}
+					
+				else if (command.equals("supprimerClient")) {
 					int id = readInt(tokenizer);
 					
-					gestionClient.delete(id);
+					Client client = gestionClient.getClient(id);
 
+					if (client != null && gestionClient.delete(client))
+					{
+						System.out.println("Client supprimé");
+					}
+					else
+					{
+						System.out.println("Client non supprimé");
+					}
 
 				} else if (command.equals("ajouterChambre")) {
 					// Extract parameters
@@ -182,10 +202,9 @@ public class AubergeInn {
 					// Extract parameter
 					int idClient = readInt(tokenizer);
 					
-					gestionClient.information(idClient);
-					gestionReservation.information(idClient);
+					Client client = gestionClient.getClient(idClient);
 
-
+					client.printClient();
 
 					// Call the method to display client information
 					// displayClient(idClient);

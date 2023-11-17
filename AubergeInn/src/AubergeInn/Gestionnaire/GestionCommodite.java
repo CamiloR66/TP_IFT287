@@ -15,7 +15,7 @@ public class GestionCommodite {
 
     private Connexion cx;
 
-    public GestionCommodite(TableCommodite tableCommodite, TableChambre tableChambre) throws IFT287Exception
+    public GestionCommodite(Connexion cx) throws IFT287Exception
     {
         this.cx = tableCommodite.getConnexion();
         if (tableCommodite.getConnexion() != tableChambre.getConnexion())

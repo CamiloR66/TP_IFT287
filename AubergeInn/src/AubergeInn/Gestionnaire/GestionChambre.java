@@ -9,18 +9,14 @@ import AubergeInn.IFT287Exception;
 import AubergeInn.modeles.Chambre;
 import AubergeInn.modeles.Commodite;
 import AubergeInn.modeles.Reservation;
-import AubergeInn.tables.TableChambre;
-import AubergeInn.tables.TableCommodite;
-import AubergeInn.tables.TableReservation;
+
 
 public class GestionChambre {
 
-	private TableChambre tableChambre;
-	private TableReservation tableReservation;
-	private TableCommodite tableCommodite;
+
 	private Connexion cx;
 
-	public GestionChambre(TableChambre tableChambre, TableReservation tableReservation, TableCommodite tableCommodite) throws IFT287Exception {
+	public GestionChambre(Connexion cx) throws IFT287Exception {
 		this.cx = tableChambre.getConnexion();
 		if (tableChambre.getConnexion() != tableReservation.getConnexion())
 			throw new IFT287Exception("Les instances de chambre et de reservation n'utilisent pas la même connexion au serveur");
