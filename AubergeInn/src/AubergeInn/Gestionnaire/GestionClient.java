@@ -3,27 +3,38 @@ package AubergeInn.Gestionnaire;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import org.bson.Document;
+
 import AubergeInn.Connexion;
 import AubergeInn.IFT287Exception;
 import AubergeInn.modeles.Client;
-import AubergeInn.tables.TableClient;
-import AubergeInn.tables.TableReservation;
+
 
 public class GestionClient {
 
 	private Connexion cx;
-    private TableClient tableClient;
-    private TableReservation tableReservation;
+    private MongoCollection<Document> collectionClient;
 	
-	public GestionClient(TableClient tableClient, TableReservation tableReservation) throws IFT287Exception
+	public GestionClient(Connexion cx) throws IFT287Exception
     {
-        this.cx = tableClient.getConnexion();
-        if (tableClient.getConnexion() != tableReservation.getConnexion())
-            throw new IFT287Exception("Les instances de TableCLients et de TableReservations n'utilisent pas la même connexion au serveur");
-        this.tableClient = tableClient;
-        this.tableReservation = tableReservation;
+        try {
+            this.cx = cx;
+            collectionClient = cx.getMongoDatabase().getCollection("Client");
+        } catch (Exception e) {
+            throw new IFT287Exception("Impossible d'ouvrir la collection de clients");
+        }
+
+        collectionClient = cx.getMongoDatabase().getCollection("Client");
+    }
+
+    public Connexion getConnexion() {
+        return cx;
     }
 	
+
+
 	public void add(int id, String nom, String prenom, int age) throws IFT287Exception, Exception{
 		
 		try

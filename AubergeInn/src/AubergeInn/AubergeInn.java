@@ -16,10 +16,6 @@ import AubergeInn.Gestionnaire.GestionChambre;
 import AubergeInn.Gestionnaire.GestionClient;
 import AubergeInn.Gestionnaire.GestionCommodite;
 import AubergeInn.Gestionnaire.GestionReservation;
-import AubergeInn.tables.TableChambre;
-import AubergeInn.tables.TableClient;
-import AubergeInn.tables.TableCommodite;
-import AubergeInn.tables.TableReservation;
 
 
 /**

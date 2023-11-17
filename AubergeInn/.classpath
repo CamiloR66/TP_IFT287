@@ -8,5 +8,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="postgresql.jar"/>
 	<classpathentry kind="lib" path="objectdb.jar"/>
+	<classpathentry kind="lib" path="mongo.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

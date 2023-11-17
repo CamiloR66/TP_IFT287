@@ -5,9 +5,16 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mongodb.client.MongoClients;
+import com.mongodb.Mongo;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoDatabase;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import com.objectdb.o.CLN.p;
 
 /**
  * Gestionnaire d'une connexion avec une BD relationnelle via JDBC.<br>
@@ -36,6 +43,9 @@ import javax.persistence.Persistence;
  *
  */
 public class Connexion {
+	private final MongoClient mongoClient;
+	private final MongoDatabase mongoDatabase;
+
 	private EntityManager em;
 	private EntityManagerFactory emf;
 
@@ -50,44 +60,43 @@ public class Connexion {
 	 * @param pass    Le mot de passe associé à l'utilisateur.
 	 */
 	public Connexion(String serveur, String bd, String user, String pass) throws IFT287Exception, SQLException {
-		if (serveur.equals("local"))
+
+		if(serveur.equals("local")) 
 		{
-			emf = Persistence.createEntityManagerFactory(bd);
+			mongoClient = MongoClients.create();	
 		}
-		else if (serveur.equals("dinf"))
+		else if (serveur.equals("dinf")) 
 		{
-			Map<String, String> properties = new HashMap<String, String>();
-			properties.put("javax.persistence.jdbc.user", user);
-			properties.put("javax.persistence.jdbc.password", pass);
-			emf = Persistence.createEntityManagerFactory("objectdb://bd-info2.dinf.usherbrooke.ca:6136/" + user + "/" + bd, properties);
+			mongoClient = MongoClients.create("mongodb://"+user+":"+pass+"@bd-info2.dinf.usherbrooke.ca:27017/"+bd+"?ssl=true");
 		}
-		else
+		else 
 		{
 			throw new IFT287Exception("Serveur inconnu");
 		}
-
-		em = emf.createEntityManager();
-
-		System.out.println("Ouverture de la connexion :\n"
-				+ "Connecté sur la BD ObjectDB "
-				+ bd + " avec l'utilisateur " + user);
+		mongoDatabase = mongoClient.getDatabase(bd);
+		
+		System.out.println("Connexion ouverte");
+		System.out.println("BD: " + bd +", user "+ user) ;
+	
 	}
 
 	/**
 	 * Fermeture d'une connexion
 	 */
-	public void fermer() throws SQLException {
-		em.close();
-		emf.close();
+	public void fermer() {
+		mongoClient.close();
 		System.out.println("Connexion fermée");
 	}
 
-	/**
-	 * Commit
-	 */
-	public void commit() throws SQLException {
-		em.getTransaction().commit();
+	public MongoDatabase getMongoDatabase() {
+		return mongoDatabase;
 	}
+
+	public MongoClient getMongoClient() {
+		return mongoClient;
+	}	
+
+	
 
 	/*public void setIsolationReadCommited() throws SQLException {
 		conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
@@ -95,30 +104,30 @@ public class Connexion {
 
 	/**
 	 * Rollback
-	 */
-	public void rollback() throws SQLException {
-		em.getTransaction().rollback();
-	}
+	//  */
+	// public void rollback() throws SQLException {
+	// 	em.getTransaction().rollback();
+	// }
 
 	/**
 	 * Retourne la Connection ObjectDB
 	 */
-	public EntityManager getConnection() {
-		return em;
-	}
+	// public EntityManager getConnection() {
+	// 	return em;
+	// }
 
-	/*public void setAutoCommit(boolean m) throws SQLException {
-		conn.setAutoCommit(false);
-	}*/
+	// /*public void setAutoCommit(boolean m) throws SQLException {
+	// 	conn.setAutoCommit(false);
+	// }*/
 
-	/**
-	 * Retourne la liste des serveurs supportés par ce gestionnaire de connexions
-	 */
-	public static String serveursSupportes() {
-		return "local : PostgreSQL installé localement\n"
-				+ "dinf  : PostgreSQL installé sur les serveurs du département\n";
-	}
-	public void startTransaction() {
-		em.getTransaction().begin(); 
-	}
+	// /**
+	//  * Retourne la liste des serveurs supportés par ce gestionnaire de connexions
+	//  */
+	// public static String serveursSupportes() {
+	// 	return "local : PostgreSQL installé localement\n"
+	// 			+ "dinf  : PostgreSQL installé sur les serveurs du département\n";
+	// }
+	// public void startTransaction() {
+	// 	em.getTransaction().begin(); 
+	// }
 }
